@@ -1,14 +1,13 @@
 'use client';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function Home() {
-  const [f1, setF1] = useState('');
-  const [f2, setF2] = useState('');
-  const [f3, setF3] = useState('');
-  const [f4, setF4] = useState('');
+const [GameGenre, setGameGenre] = useState('');
+const [Setting, setSetting] = useState('');
+const [TargetEsrb, setTargetEsrb] = useState('');
+const [Theme, setTheme] = useState('');
   const [output, setOutput] = useState('');
   const [loading, setLoading] = useState(false);
-  const btnLabel = loading ? 'Generating...' : 'Generate';
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
@@ -18,13 +17,11 @@ export default function Home() {
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ f1, f2, f3, f4 })
+        body: JSON.stringify({ game_genre, setting, target_esrb, theme }),
       });
       const data = await res.json();
       setOutput(data.result || data.error || 'No response');
-    } catch(e: any) {
-      setOutput('Error: ' + e.message);
-    }
+    } catch(e: any) { setOutput('Error: ' + e.message); }
     setLoading(false);
   }
 
@@ -32,27 +29,17 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900 text-white flex flex-col">
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-16">
         <div className="w-full max-w-2xl">
-          <h1 className="text-3xl font-bold mb-2">AI Video Game Narrative</h1>
-          <p className="text-gray-400 mb-8">Design video game narratives with genre, setting, ESRB rating, and theme.</p>
+          <h1 className="text-3xl font-bold mb-2">Video Game Narrative Designer</h1>
+          <p className="text-gray-400 mb-8">Generate game narrative frameworks with mission structure.</p>
           <form onSubmit={handleGenerate} className="space-y-4">
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Game Genre</label>
-              <input value={f1} onChange={(e) => setF1(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400" placeholder="Type here..." />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Setting</label>
-              <input value={f2} onChange={(e) => setF2(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400" placeholder="Type here..." />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Target Esrb</label>
-              <input value={f3} onChange={(e) => setF3(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400" placeholder="Type here..." />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Theme</label>
-              <input value={f4} onChange={(e) => setF4(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400" placeholder="Type here..." />
-            </div>
-            <button type="submit" disabled={loading} className="w-full py-3 rounded-lg font-semibold text-white disabled:opacity-50 bg-emerald-600">
-              {btnLabel}
+            <div><label className="block text-sm text-gray-400 mb-1">Game Genre</label><input value={GameGenre} onChange={e=>setGameGenre(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400" placeholder="Enter game genre..." /></div>
+            <div><label className="block text-sm text-gray-400 mb-1">Setting</label><input value={Setting} onChange={e=>setSetting(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400" placeholder="Enter setting..." /></div>
+            <div><label className="block text-sm text-gray-400 mb-1">Target Esrb</label><input value={TargetEsrb} onChange={e=>setTargetEsrb(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400" placeholder="Enter target esrb..." /></div>
+            <div><label className="block text-sm text-gray-400 mb-1">Theme</label><input value={Theme} onChange={e=>setTheme(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400" placeholder="Enter theme..." /></div>
+            <button type="submit" disabled={loading}
+              className="w-full py-3 rounded-lg font-semibold text-white disabled:opacity-50 transition-opacity"
+              style={backgroundColor: 'hsl(125,55%,45%)'}>
+              {loading ? 'Generating...' : 'Generate'}
             </button>
           </form>
           {output && (
